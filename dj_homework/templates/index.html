@@ -1,0 +1,96 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block title %}Основная страница{% endblock title %}
+
+<!--Блок описывающий происходящее на сайте в зависимости от GET или POST запроса.-->
+{% block content %}
+{% if request.method == "GET" %}
+<p style="line-height: 50px;"><b>Создание формы регистрации.</b></p><br>
+{% else %}
+
+<p style="line-height: 50px;"><b>Вывод данных на странице ответа.</b></p><br>
+{% endif %}
+{% endblock content %}
+
+<!-- Блок выводящий таблицу ввода логина, пароля и возраста -->
+{% block table %}
+{% if request.method == "GET" %}
+<div style="width: 200px;">
+    <form action="" method="POST">
+        {% csrf_token %}  <!--Защита формы.-->
+        <div>
+            <label>{{ form.login.label }}:</label>
+            {{ form.login }}
+        </div>
+        <div>
+            <label>{{ form.password.label}}:</label>
+            {{ form.password }}
+        </div>
+        <div>
+            <label>{{ form.age.label }}:</label>
+            {{ form.age }}
+        </div>
+        <div>
+            <input type="submit" class="btn btn-dark" value="Отправить"> <!--For color - btn-primary-->
+        </div>
+    </form>
+</div>
+{% else %}
+<div style="width: 200px;">
+    <form action="" method="POST">
+        {% csrf_token %}  <!--Защита формы.-->
+        <div>
+            <label>{{ form.login.label }}:</label>
+            {{ form.login }}
+        </div>
+        <div>
+            <label>{{ form.password.label}}:</label>
+            {{ form.password }}
+        </div>
+        <div>
+            <label>{{ form.age.label }}:</label>
+            {{ form.age }}
+        </div>
+        <div>
+            <input type="submit" class="btn btn-dark " value="Отправить"> <!--For color - btn-primary-->
+        </div>
+    </form>
+    <p>Пользователь: <b><i>{{ login }}</i></b> добавлен в базу данных!</p>
+
+</div>
+
+{% endif %}
+{% endblock table %}
+
+<!--Блок вывода данных о зарегистрированных пользователях из БД.-->
+{% block bd %}
+{% if people.count > 0 %}
+
+<table class="table">
+    <thead>
+    <tr>
+        <th scope="col">ID</th>
+        <th scope="col">Login</th>
+        <th scope="col">Password</th>
+        <th scope="col">Age</th>
+        <th scope="col">Редактирование</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for person in people %}
+    <tr>
+        <td>{{ person.id }}</td>
+        <td>{{ person.login }}</td>
+        <td>{{ person.password }}</td>
+        <td>{{ person.age }}</td>
+        <td><a href="delete/{{ person.id }}">Удалить?</a></td>
+    </tr>
+    {% endfor %}
+
+    </tbody>
+</table>
+
+{% endif %}
+{% endblock bd %}
